@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "rivecmp"
+rootProject.name = "rive-cmp-build"
 include(":library")
 project(":library").name = "rive-cmp"
 include(":sample")
