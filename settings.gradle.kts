@@ -15,5 +15,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "rivecmp"
 include(":library")
+project(":library").name = "rive-cmp"
 include(":sample")
 include(":androidSample")
