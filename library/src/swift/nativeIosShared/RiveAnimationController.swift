@@ -178,6 +178,9 @@ import RiveRuntime
             }
             property.value = value
         }
+        // Data Binding changes need an explicit redraw when updates arrive more
+        // slowly than the animation clock (for example during a slow drag).
+        riveView?.setNeedsDisplay()
         return applied
     }
     

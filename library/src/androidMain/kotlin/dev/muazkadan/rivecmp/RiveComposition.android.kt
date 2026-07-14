@@ -55,6 +55,10 @@ actual class RiveComposition internal actual constructor(
             pendingNumberProperties.forEach { (name, value) ->
                 instance.getNumberProperty(name).value = value
             }
+            // Data Binding properties do not schedule a render on their own.
+            // Invalidate explicitly so low-frequency updates (for example a slow
+            // pull-to-refresh gesture) are visible immediately.
+            view.invalidate()
             true
         } catch (_: Exception) {
             false
