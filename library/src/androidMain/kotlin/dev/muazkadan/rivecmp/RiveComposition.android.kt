@@ -78,6 +78,19 @@ actual class RiveComposition internal actual constructor(
             pendingNumberProperties.forEach { (name, value) ->
                 instance.getNumberProperty(name).value = value
             }
+            // A state machine may stop its render loop while waiting at an idle
+            // data-bound value. Wake it after a property write so the new value
+            // is evaluated even when updates arrive from a slow gesture.
+            if (controller.playingStateMachines.isEmpty()) {
+                val stateMachineNames = controller.stateMachines.map { it.name }
+                if (stateMachineNames.isNotEmpty()) {
+                    view.play(
+                        animationNames = stateMachineNames,
+                        areStateMachines = true,
+                        settleInitialState = false,
+                    )
+                }
+            }
             // Rive polls Data Binding after advancing the state machine. Schedule
             // two frames: one to poll the new value and one to evaluate it. Slow
             // gestures may otherwise provide only the first frame.
