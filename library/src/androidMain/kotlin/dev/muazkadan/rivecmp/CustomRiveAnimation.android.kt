@@ -18,6 +18,7 @@ actual fun CustomRiveAnimation(
     composition: RiveComposition?,
     alignment: RiveAlignment,
     autoPlay: Boolean,
+    autoBind: Boolean,
     artboardName: String?,
     fit: RiveFit,
     stateMachineName: String?,
@@ -37,6 +38,7 @@ actual fun CustomRiveAnimation(
                             .setAlignment(alignment.toAndroidAlignment())
                             .setFit(fit.toAndroidFit())
                             .setAutoplay(autoPlay)
+                            .setAutoBind(autoBind)
 
                         // Set artboard name if provided
                         artboardName?.let {
@@ -64,6 +66,7 @@ actual fun CustomRiveAnimation(
                             .setAlignment(alignment.toAndroidAlignment())
                             .setFit(fit.toAndroidFit())
                             .setAutoplay(autoPlay)
+                            .setAutoBind(autoBind)
 
                         // Set artboard name if provided
                         artboardName?.let {
@@ -93,6 +96,7 @@ actual fun CustomRiveAnimation(
     url: String,
     alignment: RiveAlignment,
     autoPlay: Boolean,
+    autoBind: Boolean,
     artboardName: String?,
     fit: RiveFit,
     stateMachineName: String?,
@@ -106,6 +110,7 @@ actual fun CustomRiveAnimation(
                 .setAlignment(alignment.toAndroidAlignment())
                 .setFit(fit.toAndroidFit())
                 .setAutoplay(autoPlay)
+                .setAutoBind(autoBind)
 
             // Set artboard name if provided
             artboardName?.let {
@@ -129,6 +134,7 @@ actual fun CustomRiveAnimation(
     byteArray: ByteArray,
     alignment: RiveAlignment,
     autoPlay: Boolean,
+    autoBind: Boolean,
     artboardName: String?,
     fit: RiveFit,
     stateMachineName: String?,
@@ -143,6 +149,7 @@ actual fun CustomRiveAnimation(
                 .setAlignment(alignment.toAndroidAlignment())
                 .setFit(fit.toAndroidFit())
                 .setAutoplay(autoPlay)
+                .setAutoBind(autoBind)
 
             // Set artboard name if provided
             artboardName?.let {

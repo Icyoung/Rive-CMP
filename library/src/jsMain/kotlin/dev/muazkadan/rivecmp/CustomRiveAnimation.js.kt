@@ -22,6 +22,7 @@ actual fun CustomRiveAnimation(
     composition: RiveComposition?,
     alignment: RiveAlignment,
     autoPlay: Boolean,
+    autoBind: Boolean,
     artboardName: String?,
     fit: RiveFit,
     stateMachineName: String?,
@@ -130,6 +131,7 @@ actual fun CustomRiveAnimation(
     url: String,
     alignment: RiveAlignment,
     autoPlay: Boolean,
+    autoBind: Boolean,
     artboardName: String?,
     fit: RiveFit,
     stateMachineName: String?,
@@ -143,6 +145,7 @@ actual fun CustomRiveAnimation(
         composition = composition.value, // usage depends on API, rememberRiveComposition returns RiveCompositionResult
         alignment = alignment,
         autoPlay = autoPlay,
+        autoBind = autoBind,
         artboardName = artboardName,
         fit = fit,
         stateMachineName = stateMachineName
@@ -156,6 +159,7 @@ actual fun CustomRiveAnimation(
     byteArray: ByteArray,
     alignment: RiveAlignment,
     autoPlay: Boolean,
+    autoBind: Boolean,
     artboardName: String?,
     fit: RiveFit,
     stateMachineName: String?,
@@ -169,6 +173,7 @@ actual fun CustomRiveAnimation(
         composition = composition.value,
         alignment = alignment,
         autoPlay = autoPlay,
+        autoBind = autoBind,
         artboardName = artboardName,
         fit = fit,
         stateMachineName = stateMachineName

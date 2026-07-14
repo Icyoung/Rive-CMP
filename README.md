@@ -281,6 +281,7 @@ val composition by rememberRiveComposition {
 
 CustomRiveAnimation(
     composition = composition,
+    autoBind = true,
     stateMachineName = "State Machine 1",
 )
 
@@ -301,6 +302,8 @@ safe no-op until the web runtime integration exposes equivalent ViewModel bindin
 - `alignment`: How the animation should be aligned within its container (default:
   `RiveAlignment.CENTER`)
 - `autoPlay`: Whether the animation should start playing automatically (default: `true`)
+- `autoBind`: Whether Android should bind the artboard's default ViewModel before starting the
+  state machine (default: `false`; enable it when using `setNumberProperty`)
 - `artboardName`: Optional name of the specific artboard to use
 - `fit`: How the animation should fit within its container (default: `RiveFit.CONTAIN`)
 - `stateMachineName`: Optional name of the state machine to use
