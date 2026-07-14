@@ -40,6 +40,8 @@ expect class RiveComposition internal constructor(
     internal val spec: RiveCompositionSpec
 
     fun setNumberInput(stateMachineName: String, name: String, value: Float)
+    /** Updates a number property on the default ViewModel instance bound to the active artboard. */
+    fun setNumberProperty(name: String, value: Float)
     fun setBooleanInput(stateMachineName: String, name: String, value: Boolean)
     fun setTriggerInput(stateMachineName: String, name: String)
     fun pause()

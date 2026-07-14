@@ -1,6 +1,7 @@
 package dev.muazkadan.rivecmp
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import app.rive.runtime.kotlin.RiveAnimationView
@@ -23,6 +24,9 @@ actual fun CustomRiveAnimation(
     overlay: Boolean
 ) {
     if (composition != null) {
+        DisposableEffect(composition) {
+            onDispose { composition.connectToAnimationView(null) }
+        }
         when (val spec = composition.spec) {
             is RiveUrlCompositionSpec -> {
                 AndroidView(

@@ -16,6 +16,10 @@ actual class RiveComposition internal actual constructor(
         controllerRef?.setNumberInput(name, value)
     }
 
+    actual fun setNumberProperty(name: String, value: Float) {
+        controllerRef?.setNumberProperty(name, value)
+    }
+
     actual fun setBooleanInput(stateMachineName: String, name: String, value: Boolean) {
         controllerRef?.setBooleanInput(name, value)
     }
@@ -39,4 +43,4 @@ actual class RiveComposition internal actual constructor(
     internal actual fun connectToAnimationView(animationView: Any?) {
         controllerRef = animationView as? RiveAnimationController
     }
-} 
+}

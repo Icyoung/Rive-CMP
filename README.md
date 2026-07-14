@@ -271,6 +271,30 @@ fun rememberRiveComposition(
 ): State<RiveComposition?>
 ```
 
+### ViewModel Data Binding
+
+Composition-based animations can update a number property on the default ViewModel instance bound
+to the active artboard. Values set before the native animation is ready are retained and applied
+after binding completes on Android and iOS.
+
+```kotlin
+val composition by rememberRiveComposition {
+    RiveCompositionSpec.byteArray(riveBytes)
+}
+
+CustomRiveAnimation(
+    composition = composition,
+    stateMachineName = "State Machine 1",
+)
+
+LaunchedEffect(composition, progress) {
+    composition?.setNumberProperty("progress", progress)
+}
+```
+
+`setNumberProperty` is currently supported on Android and iOS. JS and Wasm keep the call as a
+safe no-op until the web runtime integration exposes equivalent ViewModel binding support.
+
 #### Parameters
 
 - `modifier`: Compose modifier for styling and layout
