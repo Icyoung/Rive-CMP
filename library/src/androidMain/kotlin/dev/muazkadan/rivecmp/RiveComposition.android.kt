@@ -11,6 +11,7 @@ actual class RiveComposition internal actual constructor(
     internal actual val spec: RiveCompositionSpec = spec
     private var animationViewRef: RiveAnimationView? = null
     private var boundViewModelInstance: ViewModelInstance? = null
+    private var followUpFrameScheduled = false
     private val pendingNumberProperties = mutableMapOf<String, Float>()
     private val listener = object : RiveFileController.Listener {
         override fun notifyPlay(animation: PlayableInstance) {
@@ -31,6 +32,7 @@ actual class RiveComposition internal actual constructor(
     }
 
     actual fun setNumberProperty(name: String, value: Float) {
+        if (pendingNumberProperties[name] == value && boundViewModelInstance != null) return
         pendingNumberProperties[name] = value
         applyPendingNumberProperties()
     }
@@ -59,7 +61,13 @@ actual class RiveComposition internal actual constructor(
             // two frames: one to poll the new value and one to evaluate it. Slow
             // gestures may otherwise provide only the first frame.
             view.invalidate()
-            view.postOnAnimation { view.invalidate() }
+            if (!followUpFrameScheduled) {
+                followUpFrameScheduled = true
+                view.postOnAnimation {
+                    followUpFrameScheduled = false
+                    if (animationViewRef === view) view.invalidate()
+                }
+            }
             true
         } catch (_: Exception) {
             false
@@ -91,9 +99,15 @@ actual class RiveComposition internal actual constructor(
     }
 
     internal actual fun connectToAnimationView(animationView: Any?) {
+        val nextView = animationView as? RiveAnimationView
+        if (animationViewRef === nextView) {
+            applyPendingNumberProperties()
+            return
+        }
         animationViewRef?.unregisterListener(listener)
-        animationViewRef = animationView as? RiveAnimationView
+        animationViewRef = nextView
         boundViewModelInstance = null
+        followUpFrameScheduled = false
         animationViewRef?.registerListener(listener)
         applyPendingNumberProperties()
     }
