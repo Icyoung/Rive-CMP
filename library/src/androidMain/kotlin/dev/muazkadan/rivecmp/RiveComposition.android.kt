@@ -12,10 +12,12 @@ actual class RiveComposition internal actual constructor(
     private var animationViewRef: RiveAnimationView? = null
     private var boundViewModelInstance: ViewModelInstance? = null
     private var followUpFrameScheduled = false
+    private var pendingApplyScheduled = false
+    private var pendingApplyAttempts = 0
     private val pendingNumberProperties = mutableMapOf<String, Float>()
     private val listener = object : RiveFileController.Listener {
         override fun notifyPlay(animation: PlayableInstance) {
-            applyPendingNumberProperties()
+            applyPendingNumberPropertiesWhenReady()
         }
         override fun notifyPause(animation: PlayableInstance) = Unit
         override fun notifyStop(animation: PlayableInstance) = Unit
@@ -34,7 +36,26 @@ actual class RiveComposition internal actual constructor(
     actual fun setNumberProperty(name: String, value: Float) {
         if (pendingNumberProperties[name] == value && boundViewModelInstance != null) return
         pendingNumberProperties[name] = value
-        applyPendingNumberProperties()
+        applyPendingNumberPropertiesWhenReady()
+    }
+
+    private fun applyPendingNumberPropertiesWhenReady() {
+        if (pendingNumberProperties.isEmpty()) return
+        if (applyPendingNumberProperties()) {
+            pendingApplyAttempts = 0
+            return
+        }
+
+        val view = animationViewRef ?: return
+        if (pendingApplyScheduled || pendingApplyAttempts >= MaxPendingApplyAttempts) return
+        pendingApplyScheduled = true
+        view.postOnAnimation {
+            pendingApplyScheduled = false
+            if (animationViewRef === view) {
+                pendingApplyAttempts++
+                applyPendingNumberPropertiesWhenReady()
+            }
+        }
     }
 
     private fun applyPendingNumberProperties(): Boolean {
@@ -101,14 +122,21 @@ actual class RiveComposition internal actual constructor(
     internal actual fun connectToAnimationView(animationView: Any?) {
         val nextView = animationView as? RiveAnimationView
         if (animationViewRef === nextView) {
-            applyPendingNumberProperties()
+            applyPendingNumberPropertiesWhenReady()
             return
         }
         animationViewRef?.unregisterListener(listener)
         animationViewRef = nextView
         boundViewModelInstance = null
         followUpFrameScheduled = false
+        pendingApplyScheduled = false
+        pendingApplyAttempts = 0
         animationViewRef?.registerListener(listener)
-        applyPendingNumberProperties()
+        applyPendingNumberPropertiesWhenReady()
+    }
+
+
+    private companion object {
+        const val MaxPendingApplyAttempts = 120
     }
 }
