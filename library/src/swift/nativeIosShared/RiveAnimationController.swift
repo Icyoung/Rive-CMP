@@ -7,6 +7,8 @@ import RiveRuntime
 
 @objcMembers public class RiveAnimationController: NSObject {
     private var viewModel: RiveViewModel?
+    private var boundViewModelInstance: RiveDataBindingViewModel.Instance?
+    private var pendingNumberProperties: [String: Float] = [:]
     private var riveView: RiveView?
     private var pendingConfiguration: (url: String, autoPlay: Bool, artboardName: String?, stateMachineName: String?, fit: RiveFit, alignment: RiveAlignment)?
 
@@ -38,6 +40,7 @@ import RiveRuntime
             loadCdn: false,
             artboardName: artboardName
         )
+        enableAutoBind()
 
         // If view was already requested, create it now
         if riveView == nil {
@@ -89,6 +92,7 @@ import RiveRuntime
                     artboardName: artboardName
                 )
             }
+            enableAutoBind()
 
             // If view was already requested, create it now
             if riveView == nil {
@@ -143,11 +147,38 @@ import RiveRuntime
         }
         riveView = nil
         viewModel = nil
+        boundViewModelInstance = nil
         pendingConfiguration = nil
     }
     
     public func setNumberInput(_ name: String, _ value: Float) {
         viewModel?.setInput(name, value: value)
+    }
+
+    @discardableResult
+    public func setNumberProperty(_ name: String, _ value: Float) -> Bool {
+        pendingNumberProperties[name] = value
+        return applyPendingNumberProperties()
+    }
+
+    private func enableAutoBind() {
+        viewModel?.riveModel?.enableAutoBind { [weak self] instance in
+            self?.boundViewModelInstance = instance
+            _ = self?.applyPendingNumberProperties()
+        }
+    }
+
+    private func applyPendingNumberProperties() -> Bool {
+        guard let instance = boundViewModelInstance else { return false }
+        var applied = true
+        for (name, value) in pendingNumberProperties {
+            guard let property = instance.numberProperty(fromPath: name) else {
+                applied = false
+                continue
+            }
+            property.value = value
+        }
+        return applied
     }
     
     public func setBooleanInput(_ name: String, _ value: Bool) {

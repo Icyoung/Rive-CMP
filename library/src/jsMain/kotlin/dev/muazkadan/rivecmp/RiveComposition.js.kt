@@ -19,6 +19,8 @@ actual class RiveComposition internal actual constructor(
         }
     }
 
+    actual fun setNumberProperty(name: String, value: Float) = Unit
+
     actual fun setBooleanInput(stateMachineName: String, name: String, value: Boolean) {
         val inputs = riveInstance?.stateMachineInputs(stateMachineName)
         if (inputs != null) {
